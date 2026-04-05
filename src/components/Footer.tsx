@@ -1,81 +1,45 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-const taglineLetters = "Materials for the future".split("");
-
-// Pre-computed per-letter random offsets so they're stable across renders
-const letterOffsets = taglineLetters.map(() => ({
-  y: Math.random() * 6 - 3,
-  delay: Math.random() * 0.08,
-}));
-
+/**
+ * Minimal lab-style footer.
+ * Includes a live timestamp that updates every second —
+ * reinforces the "active lab" feel.
+ */
 export default function Footer() {
-  const [copyrightHovered, setCopyrightHovered] = useState(false);
-  const [taglineHovered, setTaglineHovered] = useState(false);
+  const [time, setTime] = useState("");
+
+  useEffect(() => {
+    const update = () => {
+      const now = new Date();
+      setTime(
+        now.toISOString().replace("T", " ").slice(0, 19) + " UTC"
+      );
+    };
+    update();
+    const interval = setInterval(update, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
-    <footer className="py-8 px-8 md:px-12 border-t border-white/5">
+    <footer className="py-8 px-8 md:px-12 border-t border-white/[0.03]">
       <div className="flex items-center justify-between">
-        <span
-          className="relative text-[10px] tracking-[0.3em] text-white/15 uppercase cursor-default"
-          onMouseEnter={() => setCopyrightHovered(true)}
-          onMouseLeave={() => setCopyrightHovered(false)}
-          data-cursor="expand"
-        >
-          <AnimatePresence mode="wait">
-            {copyrightHovered ? (
-              <motion.span
-                key="built"
-                className="block"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
-              >
-                Built different.
-              </motion.span>
-            ) : (
-              <motion.span
-                key="copyright"
-                className="block"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
-              >
-                &copy; Sunder {new Date().getFullYear()}
-              </motion.span>
-            )}
-          </AnimatePresence>
+        <span className="text-[9px] tracking-[0.2em] text-white/[0.06] font-mono">
+          &copy; Sunder {new Date().getFullYear()}
         </span>
 
-        <span
-          className="text-[10px] tracking-[0.2em] text-white/10 cursor-default flex"
-          onMouseEnter={() => setTaglineHovered(true)}
-          onMouseLeave={() => setTaglineHovered(false)}
+        <span className="text-[9px] tracking-[0.12em] text-white/[0.04] font-mono">
+          {time}
+        </span>
+
+        <a
+          href="mailto:hello@sunder.com"
+          className="text-[9px] tracking-[0.2em] text-white/[0.06] hover:text-white/20 transition-colors duration-500 font-mono"
           data-cursor="expand"
         >
-          {taglineLetters.map((letter, i) => (
-            <motion.span
-              key={i}
-              className="inline-block whitespace-pre"
-              animate={
-                taglineHovered
-                  ? { y: letterOffsets[i].y }
-                  : { y: 0 }
-              }
-              transition={{
-                duration: 0.3,
-                delay: taglineHovered ? letterOffsets[i].delay : 0,
-                ease: "easeOut",
-              }}
-            >
-              {letter}
-            </motion.span>
-          ))}
-        </span>
+          hello@sunder.com
+        </a>
       </div>
     </footer>
   );
