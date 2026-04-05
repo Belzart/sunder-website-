@@ -24,7 +24,7 @@ const PARTICLE_POSITIONS = (() => {
 })();
 
 /* -------------------------------------------------------------------------- */
-/*  Particles (lightweight)                                                   */
+/*  Particles                                                                 */
 /* -------------------------------------------------------------------------- */
 
 function Particles() {
@@ -58,28 +58,19 @@ function Particles() {
 }
 
 /* -------------------------------------------------------------------------- */
-/*  Scene — lightweight, no bloom, no HDR environment                         */
+/*  Scene                                                                     */
 /* -------------------------------------------------------------------------- */
 
 export default function SphereScene() {
   return (
     <>
-      {/* Simple lighting — no expensive Environment map */}
       <ambientLight intensity={0.3} />
       <directionalLight position={[5, 5, 5]} intensity={0.8} color="#ffffff" />
-      <directionalLight
-        position={[-3, -2, -4]}
-        intensity={0.3}
-        color="#8899bb"
-      />
+      <directionalLight position={[-3, -2, -4]} intensity={0.3} color="#8899bb" />
       <pointLight position={[0, 3, 4]} intensity={0.4} color="#aaccff" />
-      {/* Fill light from below for a bit of rim */}
       <pointLight position={[0, -4, 2]} intensity={0.15} color="#ff6a00" />
 
-      {/* Physics playground */}
       <PlaygroundScene />
-
-      {/* Background particles */}
       <Particles />
     </>
   );

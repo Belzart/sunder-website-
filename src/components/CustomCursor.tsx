@@ -4,35 +4,26 @@ import { useEffect, useRef } from "react";
 
 export default function CustomCursor() {
   const dotRef = useRef<HTMLDivElement>(null);
-  // Lerp target
   const mouse = useRef({ x: -999, y: -999 });
-  // Current lerped position
   const current = useRef({ x: -999, y: -999 });
   const isExpanded = useRef(false);
   const rafId = useRef<number | null>(null);
-  const isTouch = useRef(false);
 
   useEffect(() => {
-    // Detect touch device — hide cursor entirely on touch
-    if (
-      typeof window !== "undefined" &&
-      window.matchMedia("(hover: none)").matches
-    ) {
-      isTouch.current = true;
+    // Detect touch device — hide cursor entirely
+    if (window.matchMedia("(hover: none)").matches) {
       return;
     }
 
     const dot = dotRef.current;
     if (!dot) return;
 
-    // Show the dot
     dot.style.opacity = "1";
 
     const onMouseMove = (e: MouseEvent) => {
       mouse.current.x = e.clientX;
       mouse.current.y = e.clientY;
 
-      // Check if hovered element (or any ancestor) has data-cursor="expand"
       const target = e.target as Element | null;
       const expandEl = target?.closest("[data-cursor='expand']");
       const shouldExpand = expandEl !== null && expandEl !== undefined;
@@ -40,12 +31,15 @@ export default function CustomCursor() {
       if (shouldExpand !== isExpanded.current) {
         isExpanded.current = shouldExpand;
         if (shouldExpand) {
-          dot.style.width = "40px";
-          dot.style.height = "40px";
-          dot.style.background = "transparent";
-          dot.style.border = "1.5px solid white";
-          dot.style.marginLeft = "-20px";
-          dot.style.marginTop = "-20px";
+          // Hot orange molten glow
+          dot.style.width = "12px";
+          dot.style.height = "12px";
+          dot.style.background = "#ff6a00";
+          dot.style.border = "none";
+          dot.style.marginLeft = "-6px";
+          dot.style.marginTop = "-6px";
+          dot.style.mixBlendMode = "normal";
+          dot.style.boxShadow = "0 0 12px rgba(255, 106, 0, 0.5), 0 0 24px rgba(255, 106, 0, 0.2)";
         } else {
           dot.style.width = "6px";
           dot.style.height = "6px";
@@ -53,12 +47,15 @@ export default function CustomCursor() {
           dot.style.border = "none";
           dot.style.marginLeft = "-3px";
           dot.style.marginTop = "-3px";
+          dot.style.mixBlendMode = "difference";
+          dot.style.boxShadow = "none";
         }
       }
     };
 
     const loop = () => {
-      const LERP = 0.15;
+      // Snappier lerp — 0.35 instead of 0.15
+      const LERP = 0.35;
       current.current.x += (mouse.current.x - current.current.x) * LERP;
       current.current.y += (mouse.current.y - current.current.y) * LERP;
 
@@ -101,8 +98,8 @@ export default function CustomCursor() {
         zIndex: 9999,
         opacity: 0,
         transition:
-          "width 0.2s ease, height 0.2s ease, background 0.2s ease, border 0.2s ease, margin 0.2s ease",
-        willChange: "transform, left, top",
+          "width 0.15s ease, height 0.15s ease, background 0.15s ease, border 0.15s ease, margin 0.15s ease, box-shadow 0.15s ease, mix-blend-mode 0.15s ease",
+        willChange: "left, top",
       }}
     />
   );

@@ -17,6 +17,16 @@ body {
   color: var(--foreground);
 }
 
+/* Hide system cursor on desktop — custom cursor replaces it */
+@media (hover: hover) {
+  body {
+    cursor: none;
+  }
+  a, button, [role="button"] {
+    cursor: none;
+  }
+}
+
 html {
   scroll-behavior: smooth;
 }
