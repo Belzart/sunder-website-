@@ -13,14 +13,12 @@ export default function MaterialSphere() {
   const mounted = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Scroll-to-scale: forward wheel events into a custom event the scene can read
+  // Scroll-to-scale
   const scaleRef = useRef(1);
   const handleWheel = useCallback((e: React.WheelEvent) => {
     e.stopPropagation();
     const delta = -e.deltaY * 0.001;
     scaleRef.current = Math.max(0.4, Math.min(2.5, scaleRef.current + delta));
-
-    // Dispatch custom event that SphereScene can pick up
     window.dispatchEvent(
       new CustomEvent("sphere-scale", { detail: scaleRef.current })
     );
@@ -54,7 +52,7 @@ export default function MaterialSphere() {
     >
       <Canvas
         camera={{ position: [0, 0, 6], fov: 45 }}
-        dpr={[1, 2]}
+        dpr={[1, 1.5]}
         gl={{
           antialias: true,
           toneMapping: THREE.ACESFilmicToneMapping,
