@@ -12,7 +12,7 @@ export default function Home() {
       <SphereBackground />
 
       {/* Content layers — sit above the sphere */}
-      <div className="relative z-10">
+      <div className="relative z-10 pointer-events-none [&_a]:pointer-events-auto [&_button]:pointer-events-auto [&_[data-cursor='expand']]:pointer-events-auto [&_nav]:pointer-events-auto">
         <Navbar />
         <HeroSection />
         <ManifestoSection />
